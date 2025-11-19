@@ -10,7 +10,7 @@
 
 - [x] Week 4: Add Tailwind CSS styling
 - [x] Week 5: Recap and cleanup for Vite version
-- [ ] Week 6: Migrate to Next.js
+- [x] Week 6: Migrate to Next.js
 - [ ] Week 7: Next.js routing and pages
 
 ## Phase 3: Backend & Deployment (Weeks 8-10)
