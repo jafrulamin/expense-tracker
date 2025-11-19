@@ -9,7 +9,7 @@
 ## Phase 2: Styling & Migration (Weeks 4-7)
 
 - [x] Week 4: Add Tailwind CSS styling
-- [ ] Week 5: Improve UI and user experience
+- [x] Week 5: Recap and cleanup for Vite version
 - [ ] Week 6: Migrate to Next.js
 - [ ] Week 7: Next.js routing and pages
 

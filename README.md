@@ -20,6 +20,22 @@ A simple personal expense tracking application built as part of the CUNY Tech Pr
    npm run dev
    ```
 
+## Current Features
+
+- ✅ Add new expenses with description, amount, category, and date
+- ✅ View list of all expenses
+- ✅ See total expenses count and total amount spent
+- ✅ Delete individual expenses
+- ✅ Highlighted most recent expense
+- ✅ Responsive design with Tailwind CSS
+
+## Planned Next Steps
+
+- Migrate to Next.js for better performance and routing
+- Add backend API and database integration
+- Implement user authentication and multi-user support
+- Deploy to production
+
 ## Project Structure
 
 - `src/` - React application source code
@@ -28,3 +44,5 @@ A simple personal expense tracking application built as part of the CUNY Tech Pr
 - `public/` - Static assets
 - `LICENSE` - MIT License
 - `README.md` - This file
+
+**Note:** You can take a screenshot of the current UI and place it in a `screenshots/` folder later if needed.
