@@ -1,10 +1,3 @@
-/*
-  TypeScript notes:
-  - ExpenseCardProps interface defines the props contract.
-  - We use union type ExpenseCategory for safe categories.
-  - Optional props (onDelete, highlighted, showCategory) with defaults.
-*/
-
 import type { ExpenseCategory } from '../types';
 
 export interface ExpenseCardProps {
@@ -15,10 +8,9 @@ export interface ExpenseCardProps {
   date: string;
   onDelete?: (id: number) => void;
   highlighted?: boolean;
-  showCategory?: boolean;
 }
 
-function ExpenseCard({
+export default function ExpenseCard({
   id,
   description,
   amount,
@@ -26,7 +18,6 @@ function ExpenseCard({
   date,
   onDelete,
   highlighted = false,
-  showCategory = true,
 }: ExpenseCardProps) {
   return (
     <div
@@ -36,7 +27,7 @@ function ExpenseCard({
     >
       <div className="flex-1">
         <h3 className="font-semibold text-gray-800">{description}</h3>
-        {showCategory && <p className="text-sm text-gray-600">{category}</p>}
+        <p className="text-sm text-gray-600">{category}</p>
         <p className="text-xs text-gray-500">{date}</p>
       </div>
       <div className="flex flex-col items-end gap-2">
@@ -54,4 +45,3 @@ function ExpenseCard({
   );
 }
 
-export default ExpenseCard;

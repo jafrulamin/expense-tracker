@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import type { Expense, ExpenseCategory } from '../types';
 
@@ -5,7 +7,7 @@ interface ExpenseFormProps {
   onAddExpense: (expenseData: Omit<Expense, 'id'>) => void;
 }
 
-function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
+export default function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState<ExpenseCategory>('Food');
@@ -14,7 +16,6 @@ function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Basic validation
     if (!description || !amount || !category || !date) {
       alert('Please fill in all fields');
       return;
@@ -27,7 +28,6 @@ function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
       date,
     });
 
-    // Reset form
     setDescription('');
     setAmount('');
     setCategory('Food');
@@ -107,4 +107,3 @@ function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
   );
 }
 
-export default ExpenseForm;

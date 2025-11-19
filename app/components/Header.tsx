@@ -1,4 +1,4 @@
-function Header() {
+export default function Header() {
   return (
     <header className="mb-4 border-b pb-2">
       <h1 className="text-2xl font-semibold text-gray-800">Expense Tracker</h1>
@@ -7,4 +7,3 @@ function Header() {
   );
 }
 
-export default Header;

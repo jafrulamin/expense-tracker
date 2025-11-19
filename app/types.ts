@@ -8,6 +8,3 @@ export type Expense = {
   date: string;
 };
 
-export type SortOption = 'date' | 'amount' | 'category';
-export type FilterOption = 'All' | ExpenseCategory;
-

@@ -4,7 +4,7 @@ interface ExpenseSummaryProps {
   expenses: Expense[];
 }
 
-function ExpenseSummary({ expenses }: ExpenseSummaryProps) {
+export default function ExpenseSummary({ expenses }: ExpenseSummaryProps) {
   const totalAmount = expenses.reduce((sum, expense) => sum + expense.amount, 0);
 
   return (
@@ -21,4 +21,3 @@ function ExpenseSummary({ expenses }: ExpenseSummaryProps) {
   );
 }
 
-export default ExpenseSummary;

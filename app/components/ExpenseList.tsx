@@ -6,7 +6,7 @@ interface ExpenseListProps {
   onDelete?: (id: number) => void;
 }
 
-function ExpenseList({ expenses, onDelete }: ExpenseListProps) {
+export default function ExpenseList({ expenses, onDelete }: ExpenseListProps) {
   if (expenses.length === 0) {
     return <p className="text-center text-gray-500 py-8">No expenses yet</p>;
   }
@@ -29,4 +29,3 @@ function ExpenseList({ expenses, onDelete }: ExpenseListProps) {
   );
 }
 
-export default ExpenseList;

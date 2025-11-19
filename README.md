@@ -1,12 +1,15 @@
-# Expense Tracker (Vite Version)
+# Expense Tracker (Next.js Version)
 
 A simple personal expense tracking application built as part of the CUNY Tech Prep program. This app helps users track their daily expenses and manage their budget.
 
+**Note:** The original Vite version has been backed up to `Old-expense-tracker` folder on the Desktop.
+
 ## Tech Stack
 
-- **Vite** - Build tool and dev server
+- **Next.js 15** - React framework with App Router
 - **React** - UI library
 - **TypeScript** - Type-safe JavaScript
+- **Tailwind CSS** - Utility-first CSS framework
 
 ## Getting Started
 
@@ -38,10 +41,15 @@ A simple personal expense tracking application built as part of the CUNY Tech Pr
 
 ## Project Structure
 
-- `src/` - React application source code
-- `docs/ADR/` - Architecture Decision Records
-- `docs/planning/` - Project planning and standup notes
-- `public/` - Static assets
+- `app/` - Next.js app directory
+  - `components/` - React components
+  - `types.ts` - TypeScript type definitions
+  - `page.tsx` - Main page
+  - `layout.tsx` - Root layout
+  - `globals.css` - Global styles
+- `docs/` - Documentation
+  - `ADR/` - Architecture Decision Records
+  - `planning/` - Project planning and standup notes
 - `LICENSE` - MIT License
 - `README.md` - This file
 

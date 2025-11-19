@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import Header from './components/Header';
-import ExpenseSummary from './components/ExpenseSummary';
-import ExpenseForm from './components/ExpenseForm';
-import ExpenseList from './components/ExpenseList';
-import type { Expense } from './types';
+'use client';
 
-// Initial sample expenses
+import { useState } from 'react';
+import Header from './Header';
+import ExpenseSummary from './ExpenseSummary';
+import ExpenseForm from './ExpenseForm';
+import ExpenseList from './ExpenseList';
+import type { Expense } from '../types';
+
 const initialExpenses: Expense[] = [
   {
     id: 1,
@@ -30,7 +31,7 @@ const initialExpenses: Expense[] = [
   },
 ];
 
-function App() {
+export default function ExpenseApp() {
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
 
   const handleAddExpense = (expenseData: Omit<Expense, 'id'>) => {
@@ -57,4 +58,3 @@ function App() {
   );
 }
 
-export default App;
