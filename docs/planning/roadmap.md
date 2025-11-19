@@ -11,7 +11,7 @@
 - [x] Week 4: Add Tailwind CSS styling
 - [x] Week 5: Recap and cleanup for Vite version
 - [x] Week 6: Migrate to Next.js
-- [ ] Week 7: Next.js routing and pages
+- [x] Week 7: LocalStack S3 receipt uploads
 
 ## Phase 3: Backend & Deployment (Weeks 8-10)
 

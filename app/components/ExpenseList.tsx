@@ -21,6 +21,7 @@ export default function ExpenseList({ expenses, onDelete }: ExpenseListProps) {
           amount={expense.amount}
           category={expense.category}
           date={expense.date}
+          receiptUrl={expense.receiptUrl}
           onDelete={onDelete}
           highlighted={index === 0}
         />

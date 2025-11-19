@@ -18,14 +18,28 @@ A simple personal expense tracking application built as part of the CUNY Tech Pr
    npm install
    ```
 
-2. Start the development server:
+2. Start LocalStack (for S3 receipt storage):
+   ```bash
+   docker-compose up -d
+   ```
+
+3. Create the S3 bucket:
+   ```bash
+   npm run create-bucket
+   ```
+
+4. Start the development server:
    ```bash
    npm run dev
    ```
 
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
 ## Current Features
 
 - ✅ Add new expenses with description, amount, category, and date
+- ✅ Upload receipt images (stored in LocalStack S3)
+- ✅ View receipts from expense cards
 - ✅ View list of all expenses
 - ✅ See total expenses count and total amount spent
 - ✅ Delete individual expenses
