@@ -37,14 +37,22 @@ A simple personal expense tracking application built as part of the CUNY Tech Pr
 
 ## Current Features
 
+- ✅ User authentication with NextAuth (credentials-based)
+- ✅ Protected expense tracker (login required)
 - ✅ Add new expenses with description, amount, category, and date
 - ✅ Upload receipt images (stored in LocalStack S3)
 - ✅ View receipts from expense cards
 - ✅ View list of all expenses
 - ✅ See total expenses count and total amount spent
 - ✅ Delete individual expenses
+- ✅ Expenses linked to user email
 - ✅ Highlighted most recent expense
 - ✅ Responsive design with Tailwind CSS
+
+## Demo Login
+
+- **Email:** Any valid email address
+- **Password:** `password`
 
 ## Planned Next Steps
 

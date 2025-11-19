@@ -7,5 +7,6 @@ export type Expense = {
   category: ExpenseCategory;
   date: string;
   receiptUrl?: string;
+  userEmail?: string;
 };
 

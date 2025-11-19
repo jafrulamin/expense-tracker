@@ -15,7 +15,7 @@
 
 ## Phase 3: Backend & Deployment (Weeks 8-10)
 
-- [ ] Week 8: Set up database and backend
-- [ ] Week 9: Add user authentication
+- [x] Week 8: Add user authentication
+- [ ] Week 9: Set up database and backend
 - [ ] Week 10: Deploy to production
 

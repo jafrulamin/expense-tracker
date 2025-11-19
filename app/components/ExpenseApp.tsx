@@ -1,11 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import { signOut } from 'next-auth/react';
 import Header from './Header';
 import ExpenseSummary from './ExpenseSummary';
 import ExpenseForm from './ExpenseForm';
 import ExpenseList from './ExpenseList';
 import type { Expense } from '../types';
+
+interface ExpenseAppProps {
+  userEmail: string;
+}
 
 const initialExpenses: Expense[] = [
   {
@@ -31,15 +36,20 @@ const initialExpenses: Expense[] = [
   },
 ];
 
-export default function ExpenseApp() {
+export default function ExpenseApp({ userEmail }: ExpenseAppProps) {
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
 
   const handleAddExpense = (expenseData: Omit<Expense, 'id'>) => {
     const newExpense: Expense = {
       id: Date.now(),
       ...expenseData,
+      userEmail,
     };
     setExpenses([...expenses, newExpense]);
+  };
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: '/auth/signin' });
   };
 
   const handleDeleteExpense = (id: number) => {
@@ -49,6 +59,19 @@ export default function ExpenseApp() {
   return (
     <div className="min-h-screen bg-slate-100 flex items-start justify-center py-8">
       <div className="w-full max-w-3xl bg-white rounded-lg shadow p-4 sm:p-6 space-y-4">
+        <div className="flex justify-between items-center mb-2 pb-2 border-b">
+          <div>
+            <p className="text-sm text-gray-600">
+              Signed in as: <span className="font-semibold">{userEmail}</span>
+            </p>
+          </div>
+          <button
+            onClick={handleSignOut}
+            className="text-sm bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded"
+          >
+            Sign Out
+          </button>
+        </div>
         <Header />
         <ExpenseSummary expenses={expenses} />
         <ExpenseForm onAddExpense={handleAddExpense} />
