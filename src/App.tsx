@@ -3,15 +3,8 @@ import Header from './components/Header';
 import ExpenseSummary from './components/ExpenseSummary';
 import ExpenseForm from './components/ExpenseForm';
 import ExpenseList from './components/ExpenseList';
+import { Expense } from './types';
 import './App.css';
-
-type Expense = {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-  date: string;
-};
 
 // Initial sample expenses
 const initialExpenses: Expense[] = [
@@ -26,7 +19,7 @@ const initialExpenses: Expense[] = [
     id: 2,
     description: 'Gas',
     amount: 45.00,
-    category: 'Transport',
+    category: 'Transportation',
     date: '2025-11-16',
   },
   {

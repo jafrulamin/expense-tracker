@@ -4,7 +4,7 @@
 
 - [x] Week 1: Repo setup + docs + initial Vite app
 - [x] Week 2: React components + state management
-- [ ] Week 3: Basic expense list and form
+- [x] Week 3: TypeScript types and union types
 
 ## Phase 2: Styling & Migration (Weeks 4-7)
 

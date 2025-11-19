@@ -88,9 +88,20 @@ header p {
   font-size: 1rem;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
   outline: none;
   border-color: #4CAF50;
+}
+
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: white;
+  cursor: pointer;
 }
 
 .submit-btn {
@@ -131,6 +142,11 @@ header p {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.expense-card.highlighted {
+  background: #fffbea;
+  border-left: 4px solid #4CAF50;
 }
 
 .expense-details h3 {

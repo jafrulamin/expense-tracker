@@ -1,12 +1,5 @@
 import { useState } from 'react';
-
-type Expense = {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-  date: string;
-};
+import { Expense, ExpenseCategory } from '../types';
 
 interface ExpenseFormProps {
   onAddExpense: (expenseData: Omit<Expense, 'id'>) => void;
@@ -15,7 +8,7 @@ interface ExpenseFormProps {
 function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState<ExpenseCategory>('Food');
   const [date, setDate] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -37,7 +30,7 @@ function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
     // Reset form
     setDescription('');
     setAmount('');
-    setCategory('');
+    setCategory('Food');
     setDate('');
   };
 
@@ -67,13 +60,16 @@ function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
       </div>
       <div className="form-group">
         <label htmlFor="category">Category</label>
-        <input
-          type="text"
+        <select
           id="category"
           value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          placeholder="e.g., Food, Transport"
-        />
+          onChange={(e) => setCategory(e.target.value as ExpenseCategory)}
+        >
+          <option value="Food">Food</option>
+          <option value="Transportation">Transportation</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="Other">Other</option>
+        </select>
       </div>
       <div className="form-group">
         <label htmlFor="date">Date</label>
@@ -92,4 +88,3 @@ function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
 }
 
 export default ExpenseForm;
-

@@ -1,10 +1,4 @@
-type Expense = {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-  date: string;
-};
+import { Expense } from '../types';
 
 interface ExpenseSummaryProps {
   expenses: Expense[];
@@ -28,4 +22,3 @@ function ExpenseSummary({ expenses }: ExpenseSummaryProps) {
 }
 
 export default ExpenseSummary;
-

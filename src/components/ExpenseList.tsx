@@ -1,12 +1,5 @@
 import ExpenseCard from './ExpenseCard';
-
-type Expense = {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-  date: string;
-};
+import { Expense } from '../types';
 
 interface ExpenseListProps {
   expenses: Expense[];
@@ -20,7 +13,7 @@ function ExpenseList({ expenses, onDelete }: ExpenseListProps) {
 
   return (
     <div className="expense-list">
-      {expenses.map((expense) => (
+      {expenses.map((expense, index) => (
         <ExpenseCard
           key={expense.id}
           id={expense.id}
@@ -29,6 +22,7 @@ function ExpenseList({ expenses, onDelete }: ExpenseListProps) {
           category={expense.category}
           date={expense.date}
           onDelete={onDelete}
+          highlighted={index === 0}
         />
       ))}
     </div>
@@ -36,4 +30,3 @@ function ExpenseList({ expenses, onDelete }: ExpenseListProps) {
 }
 
 export default ExpenseList;
-
