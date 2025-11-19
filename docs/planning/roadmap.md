@@ -3,7 +3,7 @@
 ## Phase 1: Foundation (Weeks 1-3)
 
 - [x] Week 1: Repo setup + docs + initial Vite app
-- [ ] Week 2: React components + state management
+- [x] Week 2: React components + state management
 - [ ] Week 3: Basic expense list and form
 
 ## Phase 2: Styling & Migration (Weeks 4-7)

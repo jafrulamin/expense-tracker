@@ -1,35 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import Header from './components/Header';
+import ExpenseSummary from './components/ExpenseSummary';
+import ExpenseForm from './components/ExpenseForm';
+import ExpenseList from './components/ExpenseList';
+import './App.css';
+
+type Expense = {
+  id: number;
+  description: string;
+  amount: number;
+  category: string;
+  date: string;
+};
+
+// Initial sample expenses
+const initialExpenses: Expense[] = [
+  {
+    id: 1,
+    description: 'Grocery Shopping',
+    amount: 52.30,
+    category: 'Food',
+    date: '2025-11-15',
+  },
+  {
+    id: 2,
+    description: 'Gas',
+    amount: 45.00,
+    category: 'Transport',
+    date: '2025-11-16',
+  },
+  {
+    id: 3,
+    description: 'Coffee',
+    amount: 5.50,
+    category: 'Food',
+    date: '2025-11-18',
+  },
+];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
+
+  const handleAddExpense = (expenseData: Omit<Expense, 'id'>) => {
+    const newExpense: Expense = {
+      id: Date.now(),
+      ...expenseData,
+    };
+    setExpenses([...expenses, newExpense]);
+  };
+
+  const handleDeleteExpense = (id: number) => {
+    setExpenses(expenses.filter((expense) => expense.id !== id));
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="app">
+      <Header />
+      <ExpenseSummary expenses={expenses} />
+      <ExpenseForm onAddExpense={handleAddExpense} />
+      <ExpenseList expenses={expenses} onDelete={handleDeleteExpense} />
+    </div>
+  );
 }
 
-export default App
+export default App;
