@@ -1,5 +1,5 @@
 import ExpenseCard from './ExpenseCard';
-import { Expense } from '../types';
+import type { Expense } from '../types';
 
 interface ExpenseListProps {
   expenses: Expense[];
@@ -8,11 +8,11 @@ interface ExpenseListProps {
 
 function ExpenseList({ expenses, onDelete }: ExpenseListProps) {
   if (expenses.length === 0) {
-    return <p className="no-expenses">No expenses yet</p>;
+    return <p className="text-center text-gray-500 py-8">No expenses yet</p>;
   }
 
   return (
-    <div className="expense-list">
+    <div className="space-y-2">
       {expenses.map((expense, index) => (
         <ExpenseCard
           key={expense.id}

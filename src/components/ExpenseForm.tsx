@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Expense, ExpenseCategory } from '../types';
+import type { Expense, ExpenseCategory } from '../types';
 
 interface ExpenseFormProps {
   onAddExpense: (expenseData: Omit<Expense, 'id'>) => void;
@@ -35,20 +35,27 @@ function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
   };
 
   return (
-    <form className="expense-form" onSubmit={handleSubmit}>
-      <h2>Add New Expense</h2>
-      <div className="form-group">
-        <label htmlFor="description">Description</label>
+    <form className="space-y-2 bg-slate-50 rounded-md p-3" onSubmit={handleSubmit}>
+      <h2 className="text-lg font-semibold text-gray-800 mb-3">Add New Expense</h2>
+      
+      <div className="flex flex-col gap-1">
+        <label htmlFor="description" className="text-sm font-medium text-gray-700">
+          Description
+        </label>
         <input
           type="text"
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Enter description"
+          className="border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
-      <div className="form-group">
-        <label htmlFor="amount">Amount</label>
+
+      <div className="flex flex-col gap-1">
+        <label htmlFor="amount" className="text-sm font-medium text-gray-700">
+          Amount
+        </label>
         <input
           type="number"
           id="amount"
@@ -56,14 +63,19 @@ function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
           onChange={(e) => setAmount(e.target.value)}
           placeholder="0.00"
           step="0.01"
+          className="border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
-      <div className="form-group">
-        <label htmlFor="category">Category</label>
+
+      <div className="flex flex-col gap-1">
+        <label htmlFor="category" className="text-sm font-medium text-gray-700">
+          Category
+        </label>
         <select
           id="category"
           value={category}
           onChange={(e) => setCategory(e.target.value as ExpenseCategory)}
+          className="border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="Food">Food</option>
           <option value="Transportation">Transportation</option>
@@ -71,16 +83,24 @@ function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
           <option value="Other">Other</option>
         </select>
       </div>
-      <div className="form-group">
-        <label htmlFor="date">Date</label>
+
+      <div className="flex flex-col gap-1">
+        <label htmlFor="date" className="text-sm font-medium text-gray-700">
+          Date
+        </label>
         <input
           type="date"
           id="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
+          className="border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
-      <button type="submit" className="submit-btn">
+
+      <button
+        type="submit"
+        className="mt-2 w-full sm:w-auto bg-blue-600 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700"
+      >
         Add Expense
       </button>
     </form>
