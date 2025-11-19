@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signOut } from 'next-auth/react';
 import Header from './Header';
 import ExpenseSummary from './ExpenseSummary';
@@ -12,49 +12,79 @@ interface ExpenseAppProps {
   userEmail: string;
 }
 
-const initialExpenses: Expense[] = [
-  {
-    id: 1,
-    description: 'Grocery Shopping',
-    amount: 52.30,
-    category: 'Food',
-    date: '2025-11-15',
-  },
-  {
-    id: 2,
-    description: 'Gas',
-    amount: 45.00,
-    category: 'Transportation',
-    date: '2025-11-16',
-  },
-  {
-    id: 3,
-    description: 'Coffee',
-    amount: 5.50,
-    category: 'Food',
-    date: '2025-11-18',
-  },
-];
-
 export default function ExpenseApp({ userEmail }: ExpenseAppProps) {
-  const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleAddExpense = (expenseData: Omit<Expense, 'id'>) => {
-    const newExpense: Expense = {
-      id: Date.now(),
-      ...expenseData,
-      userEmail,
-    };
-    setExpenses([...expenses, newExpense]);
+  // Fetch expenses from database
+  useEffect(() => {
+    fetchExpenses();
+  }, []);
+
+  const fetchExpenses = async () => {
+    try {
+      const response = await fetch('/api/expenses');
+      if (response.ok) {
+        const data = await response.json();
+        setExpenses(data);
+      }
+    } catch (error) {
+      console.error('Error fetching expenses:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddExpense = async (expenseData: Omit<Expense, 'id'>) => {
+    try {
+      const response = await fetch('/api/expenses', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(expenseData),
+      });
+
+      if (response.ok) {
+        const newExpense = await response.json();
+        setExpenses([newExpense, ...expenses]);
+      } else {
+        alert('Failed to add expense');
+      }
+    } catch (error) {
+      console.error('Error adding expense:', error);
+      alert('Failed to add expense');
+    }
+  };
+
+  const handleDeleteExpense = async (id: number) => {
+    try {
+      const response = await fetch(`/api/expenses/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setExpenses(expenses.filter((expense) => expense.id !== id));
+      } else {
+        alert('Failed to delete expense');
+      }
+    } catch (error) {
+      console.error('Error deleting expense:', error);
+      alert('Failed to delete expense');
+    }
   };
 
   const handleSignOut = () => {
     signOut({ callbackUrl: '/auth/signin' });
   };
 
-  const handleDeleteExpense = (id: number) => {
-    setExpenses(expenses.filter((expense) => expense.id !== id));
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
+        <p className="text-gray-600">Loading expenses...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-start justify-center py-8">
@@ -80,4 +110,3 @@ export default function ExpenseApp({ userEmail }: ExpenseAppProps) {
     </div>
   );
 }
-

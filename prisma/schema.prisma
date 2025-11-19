@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Expense {
+  id          Int      @id @default(autoincrement())
+  userEmail   String
+  description String
+  amount      Float
+  category    String
+  date        String
+  receiptUrl  String?
+  createdAt   DateTime @default(now())
+  
+  @@index([userEmail])
+}

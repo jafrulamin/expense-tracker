@@ -18,34 +18,40 @@ A simple personal expense tracking application built as part of the CUNY Tech Pr
    npm install
    ```
 
-2. Start LocalStack (for S3 receipt storage):
+2. Start LocalStack and PostgreSQL:
    ```bash
    docker-compose up -d
    ```
 
-3. Create the S3 bucket:
+3. Set up the database:
+   ```bash
+   npm run db:push
+   ```
+
+4. Create the S3 bucket:
    ```bash
    npm run create-bucket
    ```
 
-4. Start the development server:
+5. Start the development server:
    ```bash
    npm run dev
    ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+6. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Current Features
 
+- ✅ PostgreSQL database for persistent storage
 - ✅ User authentication with NextAuth (credentials-based)
 - ✅ Protected expense tracker (login required)
 - ✅ Add new expenses with description, amount, category, and date
 - ✅ Upload receipt images (stored in LocalStack S3)
 - ✅ View receipts from expense cards
-- ✅ View list of all expenses
+- ✅ View list of all expenses (per-user)
 - ✅ See total expenses count and total amount spent
 - ✅ Delete individual expenses
-- ✅ Expenses linked to user email
+- ✅ Expenses linked to user email and stored in database
 - ✅ Highlighted most recent expense
 - ✅ Responsive design with Tailwind CSS
 
