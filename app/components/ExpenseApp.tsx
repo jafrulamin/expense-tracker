@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { signOut } from 'next-auth/react';
 import Header from './Header';
 import ExpenseSummary from './ExpenseSummary';
 import ExpenseForm from './ExpenseForm';
 import ExpenseList from './ExpenseList';
+import ExpenseFilters from './ExpenseFilters';
 import type { Expense } from '../types';
 
 interface ExpenseAppProps {
@@ -15,6 +16,8 @@ interface ExpenseAppProps {
 export default function ExpenseApp({ userEmail }: ExpenseAppProps) {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [sortBy, setSortBy] = useState('date-desc');
 
   // Fetch expenses from database
   useEffect(() => {
@@ -34,6 +37,34 @@ export default function ExpenseApp({ userEmail }: ExpenseAppProps) {
       setLoading(false);
     }
   };
+
+  // Filter and sort expenses
+  const filteredAndSortedExpenses = useMemo(() => {
+    let filtered = expenses;
+
+    // Filter by category
+    if (selectedCategory !== 'All') {
+      filtered = filtered.filter((expense) => expense.category === selectedCategory);
+    }
+
+    // Sort
+    const sorted = [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'date-desc':
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        case 'date-asc':
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        case 'amount-desc':
+          return b.amount - a.amount;
+        case 'amount-asc':
+          return a.amount - b.amount;
+        default:
+          return 0;
+      }
+    });
+
+    return sorted;
+  }, [expenses, selectedCategory, sortBy]);
 
   const handleAddExpense = async (expenseData: Omit<Expense, 'id'>) => {
     try {
@@ -105,7 +136,17 @@ export default function ExpenseApp({ userEmail }: ExpenseAppProps) {
         <Header />
         <ExpenseSummary expenses={expenses} />
         <ExpenseForm onAddExpense={handleAddExpense} />
-        <ExpenseList expenses={expenses} onDelete={handleDeleteExpense} />
+        <ExpenseFilters
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+        />
+        <ExpenseList 
+          expenses={filteredAndSortedExpenses} 
+          onDelete={handleDeleteExpense}
+          showHighlight={selectedCategory === 'All' && sortBy === 'date-desc'}
+        />
       </div>
     </div>
   );

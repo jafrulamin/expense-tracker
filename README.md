@@ -43,6 +43,9 @@ A simple personal expense tracking application built as part of the CUNY Tech Pr
 ## Current Features
 
 - ✅ PostgreSQL database for persistent storage
+- ✅ Optimized database queries with indexes
+- ✅ Filter expenses by category
+- ✅ Sort expenses by date or amount
 - ✅ User authentication with NextAuth (credentials-based)
 - ✅ Protected expense tracker (login required)
 - ✅ Add new expenses with description, amount, category, and date
@@ -59,6 +62,20 @@ A simple personal expense tracking application built as part of the CUNY Tech Pr
 
 - **Email:** Any valid email address
 - **Password:** `password`
+
+## Data & Queries
+
+### Database
+- **PostgreSQL** for persistent expense storage
+- **Prisma ORM** for type-safe database access
+- Indexed queries on `userEmail`, `date`, and `category` for optimal performance
+
+### Filtering & Sorting
+- **Filter by Category:** View expenses by Food, Transportation, Entertainment, or Other
+- **Sort Options:**
+  - Date (Newest/Oldest First)
+  - Amount (Highest/Lowest First)
+- Client-side filtering and sorting for fast, responsive UI
 
 ## Planned Next Steps
 

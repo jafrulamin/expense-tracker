@@ -17,5 +17,5 @@
 
 - [x] Week 8: Add user authentication
 - [x] Week 9: PostgreSQL database integration
-- [ ] Week 10: Deploy to production
+- [x] Week 10: Query optimization and filtering features
 

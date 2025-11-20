@@ -18,4 +18,6 @@ model Expense {
   createdAt   DateTime @default(now())
   
   @@index([userEmail])
+  @@index([userEmail, date])
+  @@index([userEmail, category])
 }
