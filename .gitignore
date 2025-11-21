@@ -31,7 +31,5 @@ coverage/
 # LocalStack
 localstack-data/
 
-# Prisma
-prisma/migrations/
-
-/lib/generated/prisma
+# Drizzle
+drizzle/

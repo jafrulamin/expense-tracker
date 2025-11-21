@@ -1,4 +1,4 @@
-export type ExpenseCategory = 'Food' | 'Transportation' | 'Entertainment' | 'Other';
+export type ExpenseCategory = "Food" | "Transportation" | "Entertainment" | "Other";
 
 export type Expense = {
   id: number;
@@ -7,6 +7,4 @@ export type Expense = {
   category: ExpenseCategory;
   date: string;
   receiptUrl?: string;
-  userEmail?: string;
 };
-

@@ -16,6 +16,6 @@
 ## Phase 3: Backend & Deployment (Weeks 8-10)
 
 - [x] Week 8: Add user authentication
-- [x] Week 9: PostgreSQL database integration
-- [x] Week 10: Query optimization and filtering features
+- [ ] Week 9: Set up database and backend
+- [ ] Week 10: Deploy to production
 

@@ -1,153 +1,138 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useMemo } from 'react';
-import { signOut } from 'next-auth/react';
-import Header from './Header';
-import ExpenseSummary from './ExpenseSummary';
-import ExpenseForm from './ExpenseForm';
-import ExpenseList from './ExpenseList';
-import ExpenseFilters from './ExpenseFilters';
-import type { Expense } from '../types';
+import { useEffect, useState, FormEvent } from "react";
+import type { Expense, ExpenseCategory } from "@/app/types";
 
-interface ExpenseAppProps {
-  userEmail: string;
-}
+type ExpenseAppProps = {
+  initialExpenses?: Expense[];
+};
 
-export default function ExpenseApp({ userEmail }: ExpenseAppProps) {
-  const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [sortBy, setSortBy] = useState('date-desc');
+const CATEGORIES: ExpenseCategory[] = ["Food", "Transportation", "Entertainment", "Other"];
 
-  // Fetch expenses from database
+export default function ExpenseApp({ initialExpenses = [] }: ExpenseAppProps) {
+  const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
+  const [description, setDescription] = useState("");
+  const [amount, setAmount] = useState("");
+  const [category, setCategory] = useState<ExpenseCategory>("Food");
+  const [date, setDate] = useState("");
+
+  async function refreshExpenses() {
+    const res = await fetch("/api/expenses");
+    if (!res.ok) return;
+    const data: Expense[] = await res.json();
+    setExpenses(data);
+  }
+
   useEffect(() => {
-    fetchExpenses();
+    if (initialExpenses.length === 0) {
+      refreshExpenses();
+    }
   }, []);
 
-  const fetchExpenses = async () => {
-    try {
-      const response = await fetch('/api/expenses');
-      if (response.ok) {
-        const data = await response.json();
-        setExpenses(data);
-      }
-    } catch (error) {
-      console.error('Error fetching expenses:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (!description || !amount || !date) return;
 
-  // Filter and sort expenses
-  const filteredAndSortedExpenses = useMemo(() => {
-    let filtered = expenses;
-
-    // Filter by category
-    if (selectedCategory !== 'All') {
-      filtered = filtered.filter((expense) => expense.category === selectedCategory);
-    }
-
-    // Sort
-    const sorted = [...filtered].sort((a, b) => {
-      switch (sortBy) {
-        case 'date-desc':
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        case 'date-asc':
-          return new Date(a.date).getTime() - new Date(b.date).getTime();
-        case 'amount-desc':
-          return b.amount - a.amount;
-        case 'amount-asc':
-          return a.amount - b.amount;
-        default:
-          return 0;
-      }
+    const res = await fetch("/api/expenses", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        description,
+        amount: Number(amount),
+        category,
+        date,
+      }),
     });
 
-    return sorted;
-  }, [expenses, selectedCategory, sortBy]);
-
-  const handleAddExpense = async (expenseData: Omit<Expense, 'id'>) => {
-    try {
-      const response = await fetch('/api/expenses', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(expenseData),
-      });
-
-      if (response.ok) {
-        const newExpense = await response.json();
-        setExpenses([newExpense, ...expenses]);
-      } else {
-        alert('Failed to add expense');
-      }
-    } catch (error) {
-      console.error('Error adding expense:', error);
-      alert('Failed to add expense');
+    if (res.ok) {
+      setDescription("");
+      setAmount("");
+      setDate("");
+      await refreshExpenses();
+    } else {
+      console.error("Failed to create expense");
     }
-  };
+  }
 
-  const handleDeleteExpense = async (id: number) => {
-    try {
-      const response = await fetch(`/api/expenses/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (response.ok) {
-        setExpenses(expenses.filter((expense) => expense.id !== id));
-      } else {
-        alert('Failed to delete expense');
-      }
-    } catch (error) {
-      console.error('Error deleting expense:', error);
-      alert('Failed to delete expense');
+  async function handleDelete(id: number) {
+    const res = await fetch(`/api/expenses/${id}`, { method: "DELETE" });
+    if (res.ok) {
+      await refreshExpenses();
+    } else {
+      console.error("Failed to delete expense");
     }
-  };
-
-  const handleSignOut = () => {
-    signOut({ callbackUrl: '/auth/signin' });
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
-        <p className="text-gray-600">Loading expenses...</p>
-      </div>
-    );
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-start justify-center py-8">
-      <div className="w-full max-w-3xl bg-white rounded-lg shadow p-4 sm:p-6 space-y-4">
-        <div className="flex justify-between items-center mb-2 pb-2 border-b">
-          <div>
-            <p className="text-sm text-gray-600">
-              Signed in as: <span className="font-semibold">{userEmail}</span>
-            </p>
-          </div>
-          <button
-            onClick={handleSignOut}
-            className="text-sm bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded"
-          >
-            Sign Out
+    <main style={{ padding: "1.5rem", maxWidth: 600, margin: "0 auto" }}>
+      <h1 style={{ marginBottom: "1rem" }}>Expense Tracker</h1>
+
+      <section style={{ marginBottom: "1.5rem" }}>
+        <h2>Add Expense</h2>
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginTop: "0.5rem" }}>
+          <input
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <input
+            placeholder="Amount"
+            type="number"
+            step="0.01"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+          />
+          <select value={category} onChange={(e) => setCategory(e.target.value as ExpenseCategory)}>
+            {CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+          <button type="submit" style={{ marginTop: "0.5rem" }}>
+            Add Expense
           </button>
+        </form>
+      </section>
+
+      <section>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h2>Expenses</h2>
+          <button onClick={refreshExpenses}>Refresh</button>
         </div>
-        <Header />
-        <ExpenseSummary expenses={expenses} />
-        <ExpenseForm onAddExpense={handleAddExpense} />
-        <ExpenseFilters
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-          sortBy={sortBy}
-          onSortChange={setSortBy}
-        />
-        <ExpenseList 
-          expenses={filteredAndSortedExpenses} 
-          onDelete={handleDeleteExpense}
-          showHighlight={selectedCategory === 'All' && sortBy === 'date-desc'}
-        />
-      </div>
-    </div>
+        {expenses.length === 0 ? (
+          <p>No expenses yet.</p>
+        ) : (
+          <ul style={{ listStyle: "none", padding: 0, marginTop: "0.5rem" }}>
+            {expenses.map((exp) => (
+              <li
+                key={exp.id}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  border: "1px solid #ddd",
+                  padding: "0.5rem",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                <div>
+                  <div>{exp.description}</div>
+                  <div style={{ fontSize: "0.9rem", color: "#555" }}>
+                    ${exp.amount.toFixed(2)} • {exp.category} • {exp.date.slice(0, 10)}
+                  </div>
+                </div>
+                <button onClick={() => handleDelete(exp.id)}>Delete</button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    </main>
   );
 }
