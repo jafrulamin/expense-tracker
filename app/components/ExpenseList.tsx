@@ -3,10 +3,11 @@ import type { Expense } from '../types';
 
 interface ExpenseListProps {
   expenses: Expense[];
+  onEdit?: (id: number, data: Omit<Expense, 'id'>) => void;
   onDelete?: (id: number) => void;
 }
 
-export default function ExpenseList({ expenses, onDelete }: ExpenseListProps) {
+export default function ExpenseList({ expenses, onEdit, onDelete }: ExpenseListProps) {
   if (expenses.length === 0) {
     return <p className="text-center text-gray-500 py-8">No expenses yet</p>;
   }
@@ -22,6 +23,7 @@ export default function ExpenseList({ expenses, onDelete }: ExpenseListProps) {
           category={expense.category}
           date={expense.date}
           receiptUrl={expense.receiptUrl}
+          onEdit={onEdit}
           onDelete={onDelete}
           highlighted={index === 0}
         />

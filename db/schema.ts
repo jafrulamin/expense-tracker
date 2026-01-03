@@ -1,8 +1,11 @@
 import { pgTable, serial, text, numeric, timestamp } from "drizzle-orm/pg-core";
 
+
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   email: text("email").notNull().unique(),
+  password: text("password"),
+  name: text("name"),
 });
 
 export const expenses = pgTable("expenses", {

@@ -1,7 +1,8 @@
 "use client";
 
-import { ReactNode } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { ReactNode, useEffect } from "react";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type AuthGateProps = {
   children: ReactNode;
@@ -9,38 +10,35 @@ type AuthGateProps = {
 
 export default function AuthGate({ children }: AuthGateProps) {
   const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/auth/signin");
+    }
+  }, [status, router]);
 
   if (status === "loading") {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        Loading...
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600">Loading...</p>
       </div>
     );
   }
 
   if (!session?.user) {
-    return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <p>Please sign in to use the Expense Tracker.</p>
-        <button
-          onClick={() => signIn("github")}
-          style={{ marginTop: "1rem", padding: "0.5rem 1rem" }}
-        >
-          Sign in with GitHub
-        </button>
-      </div>
-    );
+    return null;
   }
 
   return (
     <div>
-      <div style={{ padding: "0.5rem 1rem", borderBottom: "1px solid #ddd" }}>
-        <span style={{ marginRight: "1rem" }}>
-          Signed in as: {session.user.email}
+      <div className="bg-transparent border-b border-gray-200 px-4 py-2 flex justify-between items-center">
+        <span className="text-sm text-gray-600">
+          Signed in as: <span className="font-semibold">{session.user.email}</span>
         </span>
         <button
           onClick={() => signOut()}
-          style={{ padding: "0.25rem 0.75rem" }}
+          className="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
         >
           Sign out
         </button>
@@ -49,4 +47,3 @@ export default function AuthGate({ children }: AuthGateProps) {
     </div>
   );
 }
-

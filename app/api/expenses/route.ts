@@ -1,9 +1,10 @@
-import { auth } from "@/auth/config";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth/config";
 import { getExpensesForUser, createExpenseForUser } from "@/app/lib/expenses";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   if (!session?.user?.email) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
@@ -13,7 +14,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   if (!session?.user?.email) {
     return new NextResponse("Unauthorized", { status: 401 });
   }

@@ -1,5 +1,6 @@
+
 import { db, expenses } from "@/db";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import type { Expense, ExpenseCategory } from "@/app/types";
 
 export async function getExpensesForUser(email: string): Promise<Expense[]> {
@@ -34,10 +35,32 @@ export async function createExpenseForUser(
   });
 }
 
+export async function updateExpenseForUser(
+  email: string,
+  id: number,
+  data: {
+    description: string;
+    amount: number;
+    category: ExpenseCategory;
+    date: string;
+    receiptUrl?: string;
+  }
+): Promise<void> {
+  await db
+    .update(expenses)
+    .set({
+      description: data.description,
+      amount: data.amount.toString(),
+      category: data.category,
+      date: new Date(data.date),
+      receiptUrl: data.receiptUrl ?? null,
+    })
+    .where(and(eq(expenses.id, id), eq(expenses.userEmail, email)));
+}
+
 export async function deleteExpenseForUser(email: string, id: number): Promise<void> {
   await db
     .delete(expenses)
-    .where(eq(expenses.id, id))
-    .where(eq(expenses.userEmail, email));
+    .where(and(eq(expenses.id, id), eq(expenses.userEmail, email)));
 }
 

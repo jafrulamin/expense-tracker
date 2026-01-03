@@ -1,32 +1,65 @@
-# Expense Tracker (Next.js Version)
+# Expense Tracker
 
-A simple personal expense tracking application built as part of the CUNY Tech Prep program. This app helps users track their daily expenses and manage their budget.
+A personal expense tracking web application built with Next.js. Track your daily expenses, organize them by category, and keep an eye on your spending habits.
 
-**Note:** The original Vite version has been backed up to `Old-expense-tracker` folder on the Desktop.
+## What It Does
+
+This app lets you:
+- Sign in with GitHub or create an account with email/password
+- Add expenses with description, amount, category, and date
+- Optionally add a receipt URL (link to an external receipt)
+- View all your expenses in a list
+- Edit existing expenses
+- Delete expenses you no longer need
+- See a summary of total expenses and total amount spent
+- Use a test account for quick demo access
+
+Each user only sees their own expenses - everything is tied to your account.
 
 ## Tech Stack
 
-- **Next.js 15** - React framework with App Router
-- **React** - UI library
-- **TypeScript** - Type-safe JavaScript
-- **Tailwind CSS** - Utility-first CSS framework
+- **Next.js 15** with App Router
+- **React 19** and **TypeScript**
+- **Tailwind CSS** for styling
+- **NextAuth.js** for authentication (GitHub OAuth + email/password)
+- **Neon Postgres** for the database
+- **Drizzle ORM** for database queries and migrations
 
 ## Getting Started
 
-1. Install dependencies:
+### Prerequisites
+
+You'll need:
+- Node.js installed
+- A Neon Postgres database (free tier works fine)
+- A GitHub OAuth app (for GitHub login)
+
+### Installation
+
+1. Clone the repo and install dependencies:
    ```bash
    npm install
    ```
 
-2. Start LocalStack (for S3 receipt storage):
-   ```bash
-   docker-compose up -d
+2. Set up your environment variables. Create a `.env.local` file in the root directory:
+   ```
+   DATABASE_URL="your-neon-postgres-connection-string"
+   GITHUB_ID="your-github-oauth-client-id"
+   GITHUB_SECRET="your-github-oauth-client-secret"
+   NEXTAUTH_SECRET="generate-a-random-secret-here"
+   NEXTAUTH_URL="http://localhost:3000"
    ```
 
-3. Create the S3 bucket:
+   To generate `NEXTAUTH_SECRET`, run:
    ```bash
-   npm run create-bucket
+   openssl rand -base64 32
    ```
+
+3. Set up the database:
+   ```bash
+   npm run db:push
+   ```
+   This creates the necessary tables in your Neon database.
 
 4. Start the development server:
    ```bash
@@ -35,86 +68,89 @@ A simple personal expense tracking application built as part of the CUNY Tech Pr
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Current Features
+### Setting Up GitHub OAuth
 
-- ✅ User authentication with NextAuth (credentials-based)
-- ✅ Protected expense tracker (login required)
-- ✅ Add new expenses with description, amount, category, and date
-- ✅ Upload receipt images (stored in LocalStack S3)
-- ✅ View receipts from expense cards
-- ✅ View list of all expenses
-- ✅ See total expenses count and total amount spent
-- ✅ Delete individual expenses
-- ✅ Expenses linked to user email
-- ✅ Highlighted most recent expense
-- ✅ Responsive design with Tailwind CSS
+1. Go to GitHub → Settings → Developer Settings → OAuth Apps
+2. Click "New OAuth App"
+3. Fill in:
+   - **Application name**: Expense Tracker (or whatever you want)
+   - **Homepage URL**: `http://localhost:3000`
+   - **Authorization callback URL**: `http://localhost:3000/api/auth/callback/github`
+4. Click "Register application"
+5. Copy the **Client ID** and generate a **Client Secret**
+6. Add both to your `.env.local` file
 
-## Environment Variables
+## Features
 
-Required in `.env.local` (not committed):
+### Authentication
+- Sign in with GitHub (OAuth)
+- Sign up and sign in with email/password
+- Test account button for quick access (no registration needed)
 
-```
-DATABASE_URL="neon-connection-string"
-GITHUB_ID="github-client-id"
-GITHUB_SECRET="github-client-secret"
-NEXTAUTH_SECRET="random-long-secret"
-NEXTAUTH_URL="http://localhost:3000"
-```
+### Expense Management
+- Add expenses with:
+  - Description
+  - Amount
+  - Category (Food, Transportation, Entertainment, Other)
+  - Date
+  - Optional receipt URL (just paste a link)
+- View all expenses in a list
+- Edit any expense
+- Delete expenses
+- See summary totals (count and total amount)
 
-On Vercel:
-- Add the same variables in Project → Settings → Environment Variables
-- Set NEXTAUTH_URL to your Vercel URL, e.g. https://your-app.vercel.app
-
-## Database Setup
-
-1. Install dependencies:
-```bash
-npm install drizzle-orm pg
-npm install -D drizzle-kit
-```
-
-2. Create DB schema with Drizzle once env is set:
-```bash
-npm run db:generate
-npm run db:push
-```
-
-## Deployment Checklist
-
-### Before First Deploy:
-1. ✅ Create Neon database and get connection string
-2. ✅ Create GitHub OAuth App (callback: `https://your-app.vercel.app/api/auth/callback/github`)
-3. ✅ Generate NEXTAUTH_SECRET: `openssl rand -base64 32`
-4. ✅ Add all environment variables to Vercel
-5. ✅ Run `npm run db:push` to create tables
-6. ✅ Deploy to Vercel
-
-### Environment Variables Needed:
-- `DATABASE_URL` - Neon Postgres connection string
-- `GITHUB_ID` - GitHub OAuth Client ID
-- `GITHUB_SECRET` - GitHub OAuth Client Secret
-- `NEXTAUTH_SECRET` - Random secret (use openssl command above)
-- `NEXTAUTH_URL` - Your Vercel URL (e.g., https://your-app.vercel.app)
-
-## Planned Next Steps
-
-- Migrate to Next.js for better performance and routing
-- Add backend API and database integration
-- Implement user authentication and multi-user support
-- Deploy to production
+### User Experience
+- Responsive design that works on mobile and desktop
+- Clean, simple interface
+- Most recent expense is highlighted
+- Each user's expenses are private to their account
 
 ## Project Structure
 
-- `app/` - Next.js app directory
-  - `components/` - React components
-  - `types.ts` - TypeScript type definitions
-  - `page.tsx` - Main page
-  - `layout.tsx` - Root layout
-  - `globals.css` - Global styles
-- `docs/` - Documentation
-  - `ADR/` - Architecture Decision Records
-  - `planning/` - Project planning and standup notes
-- `LICENSE` - MIT License
-- `README.md` - This file
+```
+app/
+  ├── api/              # API routes
+  │   ├── auth/         # Authentication endpoints
+  │   └── expenses/     # Expense CRUD operations
+  ├── auth/             # Sign in/sign up pages
+  ├── components/       # React components
+  └── lib/              # Utility functions
+db/
+  ├── schema.ts         # Drizzle database schema
+  └── index.ts          # Database client setup
+drizzle/                 # Database migrations
+auth/
+  └── config.ts         # NextAuth configuration
+```
 
-**Note:** You can take a screenshot of the current UI and place it in a `screenshots/` folder later if needed.
+## Database Commands
+
+- Generate migrations: `npm run db:generate`
+- Push schema to database: `npm run db:push`
+
+## Deployment
+
+This app is ready to deploy on Vercel. Here's what you need to do:
+
+1. Push your code to GitHub
+2. Create a new project in Vercel and connect your repo
+3. Add all environment variables in Vercel's dashboard:
+   - `DATABASE_URL` (your Neon connection string)
+   - `GITHUB_ID`
+   - `GITHUB_SECRET`
+   - `NEXTAUTH_SECRET` (same value as local)
+   - `NEXTAUTH_URL` (your Vercel URL, e.g., `https://your-app.vercel.app`)
+4. Update your GitHub OAuth app callback URL to match your Vercel URL
+5. Deploy!
+
+After deployment, make sure to run `npm run db:push` to create the database tables in your production database.
+
+## Notes
+
+- Receipt URLs are just text links - the app doesn't handle file uploads
+- The test account is automatically created/updated when you click the "Use Test Account" button
+- All expenses are stored in a Postgres database and tied to the user's email
+
+## License
+
+MIT

@@ -12,8 +12,7 @@ export default function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState<ExpenseCategory>('Food');
   const [date, setDate] = useState('');
-  const [receiptFile, setReceiptFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [receiptUrl, setReceiptUrl] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,41 +22,15 @@ export default function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
       return;
     }
 
-    let receiptUrl: string | undefined;
+    const payloadReceiptUrl = receiptUrl || null;
 
-    // Upload receipt if a file is selected
-    if (receiptFile) {
-      setUploading(true);
-      try {
-        const formData = new FormData();
-        formData.append('file', receiptFile);
-
-        const response = await fetch('/api/receipts', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to upload receipt');
-        }
-
-        const data = await response.json();
-        receiptUrl = data.url;
-      } catch (error) {
-        console.error('Error uploading receipt:', error);
-        alert('Failed to upload receipt. Expense will be added without receipt.');
-      } finally {
-        setUploading(false);
-      }
-    }
-
-    // Add expense with or without receipt URL
+    // Add expense with optional receipt URL
     onAddExpense({
       description,
       amount: Number(amount),
       category,
       date,
-      receiptUrl,
+      receiptUrl: payloadReceiptUrl ?? undefined,
     });
 
     // Reset form
@@ -65,14 +38,16 @@ export default function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
     setAmount('');
     setCategory('Food');
     setDate('');
-    setReceiptFile(null);
+    setReceiptUrl('');
   };
 
   return (
-    <form className="space-y-2 bg-slate-50 rounded-md p-3" onSubmit={handleSubmit}>
-      <h2 className="text-lg font-semibold text-gray-800 mb-3">Add New Expense</h2>
+    <form className="space-y-2" onSubmit={handleSubmit}>
+      <div className="bg-blue-100 rounded-md p-3">
+        <h2 className="text-lg font-semibold text-gray-800">Add New Expense</h2>
+      </div>
       
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 bg-blue-100 rounded-md p-3">
         <label htmlFor="description" className="text-sm font-medium text-gray-700">
           Description
         </label>
@@ -86,7 +61,7 @@ export default function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
         />
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 bg-blue-100 rounded-md p-3">
         <label htmlFor="amount" className="text-sm font-medium text-gray-700">
           Amount
         </label>
@@ -101,7 +76,7 @@ export default function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
         />
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 bg-blue-100 rounded-md p-3">
         <label htmlFor="category" className="text-sm font-medium text-gray-700">
           Category
         </label>
@@ -118,7 +93,7 @@ export default function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
         </select>
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 bg-blue-100 rounded-md p-3">
         <label htmlFor="date" className="text-sm font-medium text-gray-700">
           Date
         </label>
@@ -131,29 +106,28 @@ export default function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
         />
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="receipt" className="text-sm font-medium text-gray-700">
-          Receipt (Optional)
+      <div className="flex flex-col gap-1 bg-blue-100 rounded-md p-3">
+        <label htmlFor="receiptUrl" className="text-sm font-medium text-gray-700">
+          Receipt URL (Optional)
         </label>
         <input
-          type="file"
-          id="receipt"
-          accept="image/*,.pdf"
-          onChange={(e) => setReceiptFile(e.target.files?.[0] || null)}
+          type="text"
+          id="receiptUrl"
+          placeholder="Receipt URL (optional)"
+          value={receiptUrl}
+          onChange={(e) => setReceiptUrl(e.target.value)}
           className="border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {receiptFile && (
-          <span className="text-xs text-gray-600">Selected: {receiptFile.name}</span>
-        )}
       </div>
 
-      <button
-        type="submit"
-        disabled={uploading}
-        className="mt-2 w-full sm:w-auto bg-blue-600 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-      >
-        {uploading ? 'Uploading...' : 'Add Expense'}
-      </button>
+      <div className="flex justify-center">
+        <button
+          type="submit"
+          className="mt-2 w-full sm:w-auto bg-blue-600 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          Add Expense
+        </button>
+      </div>
     </form>
   );
 }
